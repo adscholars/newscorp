@@ -1,0 +1,79 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+
+#banner{
+    width:300px;
+    height: 600px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: pointer;
+    border: 1px solid black;
+    overflow: hidden;
+    box-sizing: border-box;
+
+}
+
+#f1bg{
+    width:300px;
+    height: 600px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #fb7b09;
+}
+
+#f1logo{
+    width:300px;
+    height: 250px;
+    position: absolute;
+    top: 150px;
+    left: 0;
+    opacity: 0;
+
+}
+
+.size{
+    width:300px;
+    height: 600px;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.opacity0{
+    opacity: 0;
+}
+
+/* #globe{
+    width:300px;
+    height: 600px;
+    position: absolute;
+    top: 75px;
+    left: -90px;
+} */
+/* #copy1a{
+    width: 222px;
+    height: 85px;
+    position: absolute;
+    top: 5px;
+    left: 90px;
+} */
+
+/* #MaskOff{
+    width: 300px;
+    height: 80px;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    overflow: hidden;
+}
+#offcopy{
+    width: 300px;
+    height: 250px;
+    position: absolute;
+    bottom: 30px;
+    left: 0px;
+} */
