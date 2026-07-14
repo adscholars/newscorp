@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8"/>
+        <title>Campaign Preview</title>
+        <link rel="icon" type="image/png" href="assets/client-logo-dark.png">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+        <link rel="stylesheet" href="style.css"/>
+    </head>
+    <body>
+        <header class="header">
+            <div class="header-inner">
+                <img src="assets/company-logo-light.png" alt="Company Logo" class="logo company-logo"/>
+                <h1 id="campaignName" class="campaign-title"></h1>
+                <img src="assets/client-logo-light.png" alt="Client Logo" class="logo brand-logo"/>
+            </div>
+        </header>
+        <section class="options">
+            <div><span>Select a creative</span> <select id="creativeSelector"></select></div>
+            <div class="filter-group" id="sizeFilters"></div>
+        </section>
+        <div class="controls">
+            <button id="reloadAll" title="Reload all banners">
+                <i class="material-icons">refresh</i>
+            </button>
+            <button id="downloadAll" title="Download all banners">
+                <i class="material-icons">download</i>
+            </button>
+            <button id="infoBtn" title="Creative info">
+                <i class="material-icons">info</i>
+            </button>
+        </div>
+        <div id="infoModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h3>Banner Details</h3>
+            <button id="closeModal">
+                <i class="material-icons">close</i>
+            </button>
+            </div>
+            <div id="modalBody"></div>
+        </div>
+        </div>
+        <div id="backupImageModal" class="modal hidden">
+            <div class="modal-content backup-image-content">
+                <button id="closeBackupImage" class="modal-close">
+                    <i class="material-icons">close</i></button>
+                <img id="backupImagePreview" alt="Backup Image Preview" />
+            </div>
+        </div>
+
+        <main id="bannerContainer"></main>
+        <button id="backToTop" title="Back to top">
+            <i class="material-icons">arrow_upward</i>
+        </button>
+        <footer class="footer">© 2026 All rights reserved.</footer>
+        <script src="settings.js"></script>
+        <script src="script.js"></script>
+    </body>
+</html>
