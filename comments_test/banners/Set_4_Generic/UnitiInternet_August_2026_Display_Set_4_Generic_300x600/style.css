@@ -1,0 +1,85 @@
+@charset "UTF-8";
+iframe {
+    border: 0;
+}
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+    margin: 0px;
+    padding: 0px;
+    border: 0px none;
+    border-style: none;
+    outline: 0px;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+
+* {
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: -moz-none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+body {
+    position: absolute;
+    background: #ffffff;
+    background-color: transparent;
+    /* below improves consistancey of font rendering across browsers */
+    -webkit-font-smoothing: antialiased;
+    -moz-font-smoothing: antialiased;
+    -o-font-smoothing: antialiased;
+    /* below stops FireFox rendering copy too heavily */
+    -moz-osx-font-smoothing: grayscale;
+    font-family: 'BRHendrixSemiBold';
+}
+
+#mainContainer {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    width: 300px;
+    height: 600px;
+    border: 1px solid black;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    background-color: #d4ae38;
+    opacity: 0;
+}
+
+#content {
+    width: 100%;
+    height: 100%;
+}
+
+#click_area {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 99;
+}
+
+.hide{
+    opacity: 0;
+}
+
+.abs {
+    position: absolute;
+}
+
+img{
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    position: absolute;
+}
+
+#mainContainer:hover #cta{
+    transform: scale(1.05) !important;
+    transition: transform 0.2s ease;
+}
