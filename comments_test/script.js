@@ -152,6 +152,7 @@ function loadCreative(index) {
     iframe.style.overflow = "hidden";
     iframe.src = getBannerHtmlPath(currentCreative, item);
 
+
     const actions = document.createElement("div");
     actions.className = "banner-actions";
 
@@ -193,23 +194,23 @@ function loadCreative(index) {
     qrCodeBtn.innerHTML = '<i class="material-icons">qr_code</i>';
     qrCodeBtn.title = "QR Code";
     qrCodeBtn.onclick = () => {
-      const url =
-        getBannerPublicUrl(
-          currentCreative,
-          item
-        );
-      qrImage.src =
-        "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" +
-        encodeURIComponent(url);
-      qrBannerName.textContent = item.path;
-      setTimeout(()=>{qrModal.classList.remove("hidden")},500);
-    }
 
-    function getBannerPublicUrl(creative,item){
-      const routePart = creative.route ? `${creative.route}/` : "";
-      const baseUrl = window.location.origin;
-      return `${baseUrl}/${BASE_PATH}${creative.creativeName}/${routePart}${item.path}/index.html`;
-    }
+    qrImage.src =
+        "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + encodeURIComponent(iframe.src);
+        qrBannerName.textContent = item.path;
+
+    setTimeout(() => {
+        qrModal.classList.remove("hidden");
+    }, 500);
+
+};
+
+    // function getBannerPublicUrl(creative,item){
+    //   const routePart = creative.route ? `${creative.route}/` : "";
+    //   const baseUrl = window.location.origin;
+    //   console.log(baseUrl)
+    //   return `${baseUrl}/${BASE_PATH}${creative.creativeName}/${routePart}${item.path}/index.html`;
+    // }
 
     actions.append(reloadBtn, openBtn, backupBtn, downloadBtn, qrCodeBtn, commentBtn);
     card.append(title, iframe, actions);
@@ -249,7 +250,7 @@ const comments = await response.json();
 
       return;
     }
-
+    console.log(comments)
     comments
     .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
     .forEach(comment => {
@@ -321,10 +322,7 @@ const comments = await response.json();
 
 async function submitComment() {
 
-  const commentText =
-    document.getElementById("dashboardComment")
-      .value
-      .trim();
+  const commentText = document.getElementById("dashboardComment").value.trim();
 
   if (!dashboardComment) return;
 
@@ -352,8 +350,8 @@ async function submitComment() {
   });
 
 const result = await response.json();
-console.log("Update Result:", result);
-  document.getElementById("commentText").value = "";
+// console.log("Update Result:", result);
+  commentText.value = "";
   editingCommentId = null;
   document.getElementById("submitDashboardComment").textContent = "Submit";
 
@@ -683,9 +681,7 @@ async function openAllCommentsModal() {
 
   list.innerHTML = "<div>Loading comments...</div>";
 
-  document
-    .getElementById("allCommentsModal")
-    .classList.remove("hidden");
+  document.getElementById("allCommentsModal").classList.remove("hidden");
 
   const response =
     await fetch(
@@ -715,11 +711,6 @@ function renderAllComments(comments) {
   }
 
   comments
-    // .sort(
-    //   (a, b) =>
-    //     new Date(b.timestamp) -
-    //     new Date(a.timestamp)
-    // )
     .forEach(comment => {
 
       const card = document.createElement("div");
