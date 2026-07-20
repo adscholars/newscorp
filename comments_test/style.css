@@ -261,6 +261,14 @@ body {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 12px;
+  font-weight: 600;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+}
+
+.modal-header span {
+  font-weight: 600 !important;
 }
 
 .modal-header h3 {
@@ -293,19 +301,12 @@ body {
   max-width: none;
 }
 
-#closeModal i, #closeBackupImage i {
+#closeModal i, #closeBackupImage i, #closeCommentModal i, #closeQRcode i, #closeAllComments i  {
   background-color: #d32f2f;
+  color: #ffffff;
 }
 
-#closeModal:hover, #closeBackupImage:hover i {
-  background-color: #b71c1c;
-}
-
-#closeModal i, #closeQRcode i {
-  background-color: #d32f2f;
-}
-
-#closeModal:hover, #closeQRcode:hover i {
+#closeModal:hover, #closeBackupImage:hover, #closeQRcode:hover i {
   background-color: #b71c1c;
 }
 
@@ -341,17 +342,6 @@ body {
 
 #modalBody div{
     padding: 5px;
-}
-
-.modal-header {
-  font-weight: 600;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 8px;
-  margin-bottom: 8px;
-}
-
-.modal-header span {
-  font-weight: 600 !important;
 }
 
 .backup-image-content {
@@ -488,21 +478,21 @@ body {
     margin: 0;
 }
 
-#submitCommentBtn {
+#submitCommentBtn, #submitDashboardComment {
   background: #28a745;
   color: #fff;
 }
 
-#submitCommentBtn:hover {
+#submitCommentBtn:hover, #submitDashboardComment:hover {
   background: #218838;
 }
 
-#clearCommentBtn {
+#clearCommentBtn, #clearDashboardComment {
     background: #e53935;
     color: white;
 }
 
-#clearCommentBtn:hover {
+#clearCommentBtn:hover, #clearDashboardComment:hover {
   background: #c62828;
 }
 
@@ -521,7 +511,6 @@ body {
 .comment-item {
     border: 1px solid #ddd;
     border-radius: 4px;
-
     padding: 7px;
 }
 
@@ -529,8 +518,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    margin-bottom: 8px;
+    margin-bottom: 5px;
 }
 
 .comment-author {
@@ -539,12 +527,12 @@ body {
 }
 
 .comment-date {
-    font-size: 11px;
+    font-size: 13px;
     color: #666;
 }
 
 .comment-body {
-    font-size: 13px;
+    /* font-size: 13px; */
     line-height: 1.5;
     /* white-space: pre-wrap; */
     word-break: break-word;
@@ -598,9 +586,16 @@ body {
   color: #fff;
 }
 
+.comment-delete i{
+  background: #e53935;
+  color: #ffffff;
+}
+
 .comments-dashboard{
     width: 80%;
     position: relative;
+    height: 90%;
+    overflow: auto;
 }
 
 #closeAllComments {
@@ -609,5 +604,112 @@ body {
 }
 
 .dashboard-comment{
-    margin-top: 15px;
+    padding: 12px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.dashboard-comment:last-child {
+    border-bottom: none;
+}
+
+.dashboard-comment i{
+    color: #000 !important;
+    background-color: unset !important;
+    font-size: 22px !important;
+    vertical-align: middle !important;
+}
+
+.comment-item .comment-author i, .comment-item .comment-date i{
+    background-color: unset;
+    color: #000000;
+    vertical-align: middle;
+}
+
+/* .all-comments-search{
+    margin:15px 0;
+}
+
+.all-comments-search input{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid #dcdcdc;
+    border-radius:6px;
+    font-size:14px;
+    outline:none;
+    box-sizing:border-box;
+}
+
+.all-comments-search input:focus{
+    border-color:#2196f3;
+} */
+
+.dashboard-filters{
+    display:flex;
+    gap:10px;
+    margin-bottom:15px;
+    flex-wrap:wrap;
+}
+
+.dashboard-filters select{
+    padding:8px 10px;
+    border:1px solid #ccc;
+    border-radius:5px;
+    font-size:13px;
+}
+
+#clearFiltersBtn{
+    padding:8px 14px;
+    border:1px solid #ccc;
+    border-radius:5px;
+    background:#f5f5f5;
+    cursor:pointer;
+    font-size:13px;
+}
+
+#clearFiltersBtn:hover{
+    background:#e9e9e9;
+}
+
+#submitDashboardComment {
+    background: #28a745;
+    color: #fff;
+}
+
+/* .banner-actions button:nth-child(6){
+    display: none;
+} */
+
+.comment-field {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.comment-field label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 6px;
+}
+
+.comment-field select {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+    font-family: inherit;
+    color: #333;
+    background: #fff;
+    border: 1px solid #d6d6d6;
+    border-radius: 6px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.comment-field select:hover {
+    border-color: #bdbdbd;
+}
+
+.comment-field select:focus {
+    border-color: #0b65c2;
+    box-shadow: 0 0 0 3px rgba(11, 101, 194, 0.15);
 }

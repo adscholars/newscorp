@@ -27,9 +27,10 @@ const BASE_PATH = "banners/";
 let currentCreative = null;
 let editingCommentId = null;
 
-const COMMENTS_API = "https://script.google.com/macros/s/AKfycbzAjZbWSlx06J3kkXsMD1JEdc9IqReUB95yIaMxX_DLiS-uDeuu-NYTXglv0S9tbqph/exec";
+const COMMENTS_API = "https://script.google.com/macros/s/AKfycbxrYnP1fEvqjqKsjvvF6xPyUUwnnA5BH_ETSrBz4uYMAobbM9z6mkiC24SvQvugzJ8v/exec";
 let currentCommentBanner = null;
 let reviewerName = localStorage.getItem("reviewerName") || "";
+let allComments = [];
 
 function getRoutePart(creative) {
   return creative.route ? `${creative.route}/` : "";
@@ -127,6 +128,7 @@ function loadCreative(index) {
 
   currentCreative = PREVIEW_SETTINGS.banners[index];
   renderSizeFilters(currentCreative);
+  populateBannerSizeDropdown();
 
   currentCreative.sizes.forEach(item => {
     const [w, h] = item.size.split("x");
@@ -220,14 +222,14 @@ function loadCreative(index) {
 
   async function loadComments() {
 
-  const commentList =document.getElementById("commentList");
+  const commentList =document.getElementById("allCommentsList");
 
   commentList.innerHTML ="<div>Loading comments...</div>";
 
   try {
     const response =
       await fetch(
-        `${COMMENTS_API}?action=getComments&creative=${encodeURIComponent(currentCommentBanner.creative)}&banner=${encodeURIComponent(currentCommentBanner.banner)}`
+        `${COMMENTS_API}?action=getComments&currentCreative=${encodeURIComponent(currentCreative.creativeName)}&banner=${encodeURIComponent(currentCreative.banner)}`
       );
 
     if (!response.ok) {
@@ -252,8 +254,7 @@ const comments = await response.json();
     .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
     .forEach(comment => {
 
-      const item =
-        document.createElement("div");
+      const item = document.createElement("div");
 
       item.className =
         "comment-item";
@@ -261,11 +262,11 @@ const comments = await response.json();
       item.innerHTML = `
         <div class="comment-header">
           <div class="comment-author">
-            ${comment.reviewer}
+            <i class="material-icons">person</i> ${comment.reviewer}
           </div>
 
           <div class="comment-date">
-            ${new Date(comment.timestamp).toLocaleString()}
+            <i class="material-icons">schedule</i> ${new Date(comment.timestamp).toLocaleString()}
           </div>
         </div>
 
@@ -321,11 +322,11 @@ const comments = await response.json();
 async function submitComment() {
 
   const commentText =
-    document.getElementById("commentText")
+    document.getElementById("dashboardComment")
       .value
       .trim();
 
-  if (!commentText) return;
+  if (!dashboardComment) return;
 
   const action =
     editingCommentId
@@ -335,10 +336,10 @@ async function submitComment() {
   const payload = {
     action,
     reviewer: reviewerName,
-    creative: currentCommentBanner.creative,
-    route: currentCommentBanner.route,
-    banner: currentCommentBanner.banner,
-    comment: commentText
+    creative: currentCreative.creativeName,
+    route: currentCreative.route,
+    banner: document.getElementById("bannerSizeSelect").value,
+    comment: dashboardComment
 };
 
   if (editingCommentId) {
@@ -351,15 +352,10 @@ async function submitComment() {
   });
 
 const result = await response.json();
-
 console.log("Update Result:", result);
-
   document.getElementById("commentText").value = "";
-
   editingCommentId = null;
-
-  document.getElementById("submitCommentBtn")
-    .textContent = "Submit";
+  document.getElementById("submitDashboardComment").textContent = "Submit";
 
   loadComments();
 }
@@ -396,12 +392,13 @@ function editComment(comment) {
 
   document.getElementById("commentText").focus();
 
-  document.getElementById("submitCommentBtn")
+  document.getElementById("submitDashboardComment")
     .textContent = "Update";
 }
 
-document.getElementById("submitCommentBtn").addEventListener("click",submitComment);
+document.getElementById("submitDashboardComment").addEventListener("click",submitComment);
 document.getElementById("clearCommentBtn").addEventListener("click",() => {document.getElementById("commentText").value = "";});
+document.getElementById("clearDashboardComment").addEventListener("click",() => {document.getElementById("dashboardComment").value = "";});
 document.getElementById("closeCommentModal").addEventListener("click",() => {document.getElementById("commentModal").classList.add("hidden");});
 
   const commentModal = document.getElementById("commentModal");
@@ -632,6 +629,7 @@ document.addEventListener("keydown", e => {
 ------------------------------------------------------------------ */
 
 function openCommentModal(creative, item) {
+  // populateBannerSizeDropdown();
 
   if (!reviewerName) {
 
@@ -650,14 +648,13 @@ function openCommentModal(creative, item) {
     banner: item.path
   };
 
-  document.getElementById("commentBannerName").textContent =
-    item.path;
+  console.log(currentCommentBanner)
 
-  document.getElementById("commentName").value =
-    reviewerName;
+  document.getElementById("commentBannerName").textContent = item.path;
 
-  document.getElementById("commentText").value =
-    "";
+  document.getElementById("commentName").value = reviewerName;
+
+  document.getElementById("commentText").value = "";
 
   document.getElementById("commentModal")
     .classList.remove("hidden");
@@ -665,71 +662,85 @@ function openCommentModal(creative, item) {
   loadComments();
 }
 
-allCommentsBtn.addEventListener(
-  "click",
-  openAllCommentsModal
-);
-
+allCommentsBtn.addEventListener( "click", openAllCommentsModal);
 async function openAllCommentsModal() {
+  
+   if (!reviewerName) {
 
-  const list =
-    document.getElementById(
-      "allCommentsList"
+    reviewerName = prompt("Enter your name to leave a comment");
+
+    if (!reviewerName) return;
+
+    localStorage.setItem(
+      "reviewerName",
+      reviewerName
     );
+  }
+  // console.log(reviewerName);
+  document.getElementById("dashboardReviewer").value = reviewerName;
 
-  list.innerHTML =
-    "<div>Loading comments...</div>";
+  const list = document.getElementById("allCommentsList");
+
+  list.innerHTML = "<div>Loading comments...</div>";
 
   document
-    .getElementById(
-      "allCommentsModal"
-    )
+    .getElementById("allCommentsModal")
     .classList.remove("hidden");
 
   const response =
     await fetch(
-      `${COMMENTS_API}?action=getAllComments`
-    );
+      `${COMMENTS_API}?action=getAllComments&creative=${encodeURIComponent(currentCreative.creativeName)}`
+    )
 
-  const comments =
-    await response.json();
-
-  renderAllComments(comments);
+  const comments = await response.json();
+  allComments = comments;
+  // renderAllComments(comments);
+  populateFilters(allComments);
+  renderFilteredComments();
 }
 
 function renderAllComments(comments) {
+
   const list = document.getElementById("allCommentsList");
+
   list.innerHTML = "";
 
+  if (!comments.length) {
+    list.innerHTML = `
+      <div class="no-comments">
+        No comments yet.
+      </div>
+    `;
+    return;
+  }
+
   comments
-    .sort(
-      (a,b) =>
-        new Date(b.timestamp) -
-        new Date(a.timestamp)
-    )
+    // .sort(
+    //   (a, b) =>
+    //     new Date(b.timestamp) -
+    //     new Date(a.timestamp)
+    // )
     .forEach(comment => {
 
       const card = document.createElement("div");
       card.className = "dashboard-comment";
       card.innerHTML = `
         <div class="comment-creative">
-          ${comment.creative}
+          <i class="material-icons">route</i> ${comment.creative}
         </div>
-
         <div class="comment-banner">
-          ${comment.banner}
+          <i class="material-icons">image</i> ${comment.banner}
         </div>
-
         <div class="comment-meta">
-          ${comment.reviewer}
+          <i class="material-icons">person</i> ${comment.reviewer}
           •
-          ${new Date(comment.timestamp).toLocaleString()}
+          <i class="material-icons">schedule</i> ${new Date(comment.timestamp).toLocaleString()}
           •
-          ${comment.status}
+          <i class="material-icons">check_circle</i> ${comment.status}
         </div>
 
         <div class="comment-body">
-          ${comment.comment}
+          <i class="material-icons">comment</i> ${comment.comment}
         </div>
       `;
 
@@ -737,22 +748,140 @@ function renderAllComments(comments) {
     });
 }
 
-const allCommentsModal =
-  document.getElementById("allCommentsModal");
+function populateFilters(comments){
 
-const closeAllComments =
-  document.getElementById("closeAllComments");
+    const bannerFilter = document.getElementById("bannerFilter");
+    const reviewerFilter = document.getElementById("reviewerFilter");
 
-closeAllComments.addEventListener(
-  "click",
-  () => {
+    const banners = [...new Set(comments.map(c => c.banner))].sort();
+
+    const reviewers = [...new Set(comments.map(c => c.reviewer))].sort();
+
+    bannerFilter.innerHTML =
+        `<option value="">All Banner Sizes</option>`;
+
+    reviewerFilter.innerHTML =
+        `<option value="">All Reviewers</option>`;
+
+    banners.forEach(size=>{
+
+        bannerFilter.innerHTML +=
+            `<option>${size}</option>`;
+
+    });
+
+    reviewers.forEach(name=>{
+
+        reviewerFilter.innerHTML +=
+            `<option>${name}</option>`;
+
+    });
+
+}
+
+
+function populateBannerSizeDropdown() {
+
+    const dropdown = document.getElementById("bannerSizeSelect");
+
+    dropdown.innerHTML = "";
+
+    dropdown.add(new Option("All Sizes", "All Sizes"));
+// console.log(currentCreative.sizes[0].path);
+    const paths = currentCreative.sizes.map(size => size.path);
+
+// console.log(paths);
+
+    paths.forEach(size => {
+        dropdown.add(new Option(size, size));
+    });
+
+}
+
+function renderFilteredComments(){
+    let filtered = [...allComments];
+    const banner = bannerFilter.value;
+    const reviewer = reviewerFilter.value;
+    const status = statusFilter.value;
+    const sort = sortComments.value;
+    if(banner){
+        filtered = filtered.filter(
+            c=>c.banner===banner
+        );
+    }
+
+    if(reviewer){
+        filtered = filtered.filter(
+            c=>c.reviewer===reviewer
+        );
+    }
+
+    if(status){
+        filtered = filtered.filter(
+            c=>c.status===status
+        );
+    }
+
+    filtered.sort((a,b)=>{
+        if(sort==="newest"){
+            return new Date(b.timestamp)-new Date(a.timestamp);
+        }
+        return new Date(a.timestamp)-new Date(b.timestamp);
+    });
+
+    renderAllComments(filtered);
+}
+
+sortComments.addEventListener("change", renderFilteredComments);
+bannerFilter.addEventListener("change", renderFilteredComments);
+reviewerFilter.addEventListener("change", renderFilteredComments);
+statusFilter.addEventListener("change", renderFilteredComments);
+
+const clearFiltersBtn = document.getElementById("clearFiltersBtn");
+
+clearFiltersBtn.addEventListener("click", () => {
+
+    document.getElementById("sortComments").value = "newest";
+    document.getElementById("bannerFilter").value = "";
+    document.getElementById("reviewerFilter").value = "";
+    document.getElementById("statusFilter").value = "";
+
+    renderFilteredComments();
+
+});
+
+// const searchInput = document.getElementById("allCommentsSearch");
+
+// searchInput.addEventListener("input", () => {
+//     const keyword = searchInput.value
+//         .trim()
+//         .toLowerCase();
+
+//     if(!keyword){
+
+//         renderAllComments(allComments);
+//         return;
+//     }
+
+//     const filtered = allComments.filter(comment =>
+//         comment.banner.toLowerCase().includes(keyword) ||
+//         comment.reviewer.toLowerCase().includes(keyword) ||
+//         comment.comment.toLowerCase().includes(keyword)
+//     );
+
+//     renderAllComments(filtered);
+
+// });
+
+const allCommentsModal = document.getElementById("allCommentsModal");
+const closeAllComments = document.getElementById("closeAllComments");
+
+closeAllComments.addEventListener( "click", () => {
     allCommentsModal.classList.add("hidden");
   }
 );
 
-allCommentsModal.addEventListener(
-  "click",
-  e => {
+allCommentsModal.addEventListener( "click", e => {
     if (e.target === allCommentsModal) {
       allCommentsModal.classList.add("hidden");
     }
@@ -770,7 +899,6 @@ window.addEventListener("scroll", () => {
 backToTopBtn.addEventListener("click", () => {
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
-
 
 /* ------------------------------------------------------------------
    INITIAL LOAD

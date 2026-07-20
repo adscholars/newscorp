@@ -89,7 +89,7 @@
 
                 <div class="comment-form">
 
-                    <label>Name</label>
+                    <label>Reviewer Name</label>
                     <input
                         type="text"
                         id="commentName"
@@ -136,8 +136,68 @@
                 <button id="closeAllComments" class="modal-close">
                     <i class="material-icons">close</i></button>
             </div>
+                <!-- <div class="all-comments-search">
+                    <input type="text" id="allCommentsSearch" placeholder="Search by banner, reviewer or comment...">
+                </div> -->
+                <div class="comment-form">
 
-            <div id="allCommentsList"></div>
+                <label>Reviewer Name</label>
+                <input
+                    id="dashboardReviewer"
+                    type="text"
+                    placeholder="Enter your name">
+                    <div class="comment-field">
+                        <label for="bannerSizeSelect">Banner Size</label>
+                        <select id="bannerSizeSelect">
+                            <option value="All Sizes">All Sizes</option>
+                        </select>
+                    </div>
+                <label>Comment</label>
+                <textarea
+                    id="dashboardComment"
+                    rows="3"
+                    placeholder="Enter a creative-level comment..."
+                ></textarea>
+
+                <div class="comment-actions">
+
+                    <button id="submitDashboardComment">
+                        Submit
+                    </button>
+
+                    <button id="clearDashboardComment">
+                        Clear
+                    </button>
+
+                </div>
+
+            </div>
+                <div class="dashboard-filters">
+
+                    <select id="sortComments">
+                        <option value="newest">Newest</option>
+                        <option value="oldest">Oldest</option>
+                    </select>
+
+                    <select id="bannerFilter">
+                        <option value="">All Banner Sizes</option>
+                    </select>
+
+                    <select id="reviewerFilter">
+                        <option value="">All Reviewers</option>
+                    </select>
+
+                    <select id="statusFilter">
+                        <option value="">All Status</option>
+                        <option>Open</option>
+                        <option>Resolved</option>
+                        <option>Closed</option>
+                    </select>
+
+                    <button id="clearFiltersBtn">Clear Filters</button>
+
+                </div>
+                <div id="allCommentsList"></div>
 
             </div>
 
