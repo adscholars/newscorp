@@ -213,6 +213,7 @@ async function loadComments() {
     const comments = await response.json();
 
     allComments = comments;
+    updateCommentsDashboardBadge(allComments);
 
     populateFilters(allComments);
     renderFilteredComments();
@@ -390,18 +391,15 @@ commentsList.addEventListener("change", async (e) => {
 
     const result = await response.json();
 
-    if (result.success) {
-
+        if (result.success) {
         const comment = allComments.find(
             c => String(c.id) === String(commentId)
         );
-
         if (comment) {
             comment.status = status;
         }
-
+        renderFilteredComments();
     }
-
 });
 
 async function submitComment() {
@@ -836,6 +834,18 @@ allCommentsModal.addEventListener("click", e => {
         allCommentsModal.classList.add("hidden");
     }
 });
+
+function updateCommentsDashboardBadge(comments){
+
+    const badge = document.getElementById("commentsDashboardBadge");
+
+    const count = comments.length;
+
+    badge.textContent = count;
+
+    badge.style.display = count > 0 ? "flex" : "none";
+
+}
 
 /* ------------------------------------------------------------------
    BACK TO TOP
